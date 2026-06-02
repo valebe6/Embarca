@@ -1,0 +1,315 @@
+<div class="results-container">
+  <!-- Cabecera -->
+  <header class="results-header">
+    <div class="header-text">
+      <h1 class="text-gradient">Resultado del Proceso</h1>
+      <p>Análisis detallado de discrepancias logísticas y financieras.</p>
+    </div>
+    <div class="header-actions">
+      <button mat-stroked-button class="btn-secondary" (click)="backToUpload()">
+        <mat-icon>arrow_back</mat-icon>
+        Volver a cargar
+      </button>
+      <button mat-flat-button class="btn-primary" routerLink="/dashboard">
+        <mat-icon>dashboard</mat-icon>
+        Ver Dashboard
+      </button>
+    </div>
+  </header>
+
+  @if (!result()) {
+    <mat-card class="no-data-card">
+      <mat-card-content>
+        <mat-icon>error_outline</mat-icon>
+        <h2>No hay resultados disponibles</h2>
+        <p>Aún no has ejecutado ninguna conciliación. Por favor, carga los archivos pedidos.csv y pagos.csv para ver los resultados.</p>
+        <button mat-flat-button class="btn-primary" (click)="backToUpload()">Cargar archivos</button>
+      </mat-card-content>
+    </mat-card>
+  } @else {
+    <!-- Tab Group principal -->
+    <mat-tab-group animationDuration="200ms" class="results-tabs">
+      
+      <!-- TAB 1: RESUMEN GENERAL -->
+      <mat-tab label="Resumen General">
+        <div class="tab-content padding-top-20">
+          <div class="summary-layout">
+            <div class="summary-details">
+              <h2>Análisis General del Lote</h2>
+              <p>
+                El motor de conciliación determinístico procesó un total de <strong>{{ metrics?.pedidosProcesados }} pedidos</strong> 
+                y <strong>{{ metrics?.pagosProcesados }} pagos</strong>.
+              </p>
+
+              <!-- Tarjetas rápidas -->
+              <div class="summary-cards">
+                <div class="summary-mini-card green">
+                  <span class="num">{{ metrics?.pedidosConciliados }}</span>
+                  <span class="label">Conciliados Correctamente</span>
+                </div>
+                <div class="summary-mini-card" [ngClass]="(metrics?.inconsistenciasDetectadas ?? 0) > 0 ? 'red' : 'green-light'">
+                  <span class="num">{{ metrics?.inconsistenciasDetectadas }}</span>
+                  <span class="label">Inconsistencias Detectadas</span>
+                </div>
+              </div>
+
+              @if ((metrics?.inconsistenciasDetectadas ?? 0) > 0) {
+                <div class="status-box warning-box">
+                  <mat-icon>warning</mat-icon>
+                  <div>
+                    <h3>Se requiere atención</h3>
+                    <p>Se han identificado inconsistencias de cobro y despacho. Te recomendamos solicitar el análisis inteligente con la IA de Gemini para recibir recomendaciones y tomar acciones correctivas rápidas.</p>
+                  </div>
+                </div>
+              } @else {
+                <div class="status-box success-box">
+                  <mat-icon>check_circle</mat-icon>
+                  <div>
+                    <h3>¡Conciliación Perfecta!</h3>
+                    <p>Todos los pedidos del lote han sido liquidados exactamente con los valores correspondientes. No se detectó ningún riesgo operativo.</p>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <!-- Gráfico / Vista visual del Ahorro -->
+            <div class="summary-graphics">
+              <mat-card class="graphic-card">
+                <mat-card-content>
+                  <h3>Rendimiento del Asistente</h3>
+                  <div class="gauge-display">
+                    <span class="gauge-num">{{ metrics?.reduccionEsfuerzoPorcentaje }}%</span>
+                    <span class="gauge-label">Ahorro de Tiempo</span>
+                  </div>
+                  <p class="desc">
+                    El proceso de conciliación manual te habría tomado aproximadamente <strong>2 horas (120 minutos)</strong>. 
+                    El Copilot lo resolvió en solo <strong>5 minutos</strong> de revisión.
+                  </p>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- TAB 2: PEDIDOS CONCILIADOS -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          Conciliados ({{ conciliadosList.length }})
+        </ng-template>
+        <div class="tab-content padding-top-20">
+          @if (conciliadosList.length === 0) {
+            <div class="empty-state">
+              <mat-icon>info</mat-icon>
+              <p>No se encontraron pedidos totalmente conciliados en este lote.</p>
+            </div>
+          } @else {
+            <mat-card class="table-card">
+              <table mat-table [dataSource]="conciliadosList" class="full-width-table">
+                <!-- Pedido ID -->
+                <ng-container matColumnDef="pedido">
+                  <th mat-header-cell *matHeaderCellDef> ID Pedido </th>
+                  <td mat-cell *matCellDef="let element"> <strong>#{{ element.pedido }}</strong> </td>
+                </ng-container>
+
+                <!-- Valor Pedido -->
+                <ng-container matColumnDef="valor">
+                  <th mat-header-cell *matHeaderCellDef> Valor Pedido </th>
+                  <td mat-cell *matCellDef="let element"> ${{ element.valor | number }} </td>
+                </ng-container>
+
+                <!-- Pago Recibido -->
+                <ng-container matColumnDef="pago_recibido">
+                  <th mat-header-cell *matHeaderCellDef> Pago Recibido </th>
+                  <td mat-cell *matCellDef="let element"> ${{ element.pago_recibido | number }} </td>
+                </ng-container>
+
+                <!-- Estado -->
+                <ng-container matColumnDef="estado">
+                  <th mat-header-cell *matHeaderCellDef> Estado Logístico </th>
+                  <td mat-cell *matCellDef="let element"> 
+                    <span class="badge badge-success">{{ element.estado | uppercase }}</span>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="conciliadosColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: conciliadosColumns;"></tr>
+              </table>
+            </mat-card>
+          }
+        </div>
+      </mat-tab>
+
+      <!-- TAB 3: INCONSISTENCIAS -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          Inconsistencias ({{ inconsistenciasList.length }})
+        </ng-template>
+        <div class="tab-content padding-top-20">
+          @if (inconsistenciasList.length === 0) {
+            <div class="empty-state success">
+              <mat-icon>check_circle</mat-icon>
+              <p>¡Excelente! No se detectaron inconsistencias operativas en este lote.</p>
+            </div>
+          } @else {
+            <mat-card class="table-card">
+              <table mat-table [dataSource]="inconsistenciasList" class="full-width-table">
+                <!-- Pedido ID -->
+                <ng-container matColumnDef="pedido">
+                  <th mat-header-cell *matHeaderCellDef> ID Pedido </th>
+                  <td mat-cell *matCellDef="let element"> <strong>#{{ element.pedido }}</strong> </td>
+                </ng-container>
+
+                <!-- Tipo Inconsistencia -->
+                <ng-container matColumnDef="tipo">
+                  <th mat-header-cell *matHeaderCellDef> Tipo de Inconsistencia </th>
+                  <td mat-cell *matCellDef="let element"> 
+                    <span class="badge" [ngClass]="{
+                      'badge-danger': element.tipo === 'Pago faltante',
+                      'badge-warning': element.tipo === 'Pago sobre devolución',
+                      'badge-purple': element.tipo === 'Pago huérfano',
+                      'badge-info': element.tipo === 'Diferencia de valor'
+                    }">{{ element.tipo }}</span>
+                  </td>
+                </ng-container>
+
+                <!-- Descripción -->
+                <ng-container matColumnDef="descripcion">
+                  <th mat-header-cell *matHeaderCellDef> Descripción del Hallazgo </th>
+                  <td mat-cell *matCellDef="let element"> {{ element.descripcion }} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="inconsistenciasColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: inconsistenciasColumns;"></tr>
+              </table>
+            </mat-card>
+          }
+        </div>
+      </mat-tab>
+
+      <!-- TAB 4: CO-PILOT ANÁLISIS IA (HUMAN-IN-THE-LOOP) -->
+      <mat-tab label="Analista IA Copilot">
+        <div class="tab-content padding-top-20">
+          
+          @if (isLoadingAI()) {
+            <div class="ai-loading-card">
+              <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
+              <div class="ai-loading-text">
+                <mat-icon class="spin-icon">psychology</mat-icon>
+                <h3>Gemini está analizando las inconsistencias...</h3>
+                <p>Priorizando riesgos, estructurando hipótesis y formulando acciones operativas de resolución.</p>
+              </div>
+            </div>
+          } @else if (!aiAnalysis()) {
+            <!-- Estado sin análisis cargado -->
+            <mat-card class="ai-prompt-card">
+              <mat-card-content class="prompt-content">
+                <div class="ai-icon-large">
+                  <mat-icon>psychology</mat-icon>
+                </div>
+                <h2>¿Solicitar recomendación al Copilot de IA?</h2>
+                <p>
+                  Nuestra Inteligencia Artificial integrada con Gemini leerá los reportes, buscará patrones en las inconsistencias detectadas y generará una recomendación operativa para ayudarte a recuperar el dinero de tus ventas.
+                </p>
+                <button mat-flat-button class="btn-primary" (click)="fetchAIAnalysis()">
+                  <mat-icon>auto_awesome</mat-icon>
+                  Iniciar Análisis Inteligente
+                </button>
+              </mat-card-content>
+            </mat-card>
+          } @else {
+            <!-- Resultados del Análisis de IA -->
+            <div class="ai-results-grid">
+              
+              <!-- Tarjeta de Diagnóstico Central -->
+              <mat-card class="ai-main-card">
+                <mat-card-header>
+                  <mat-card-title class="ai-title-flex">
+                    <div class="ai-title-left">
+                      <mat-icon class="ai-spark-icon">auto_awesome</mat-icon>
+                      <span>Diagnóstico del Copilot</span>
+                    </div>
+                    <!-- Badges -->
+                    <div class="ai-badges-right">
+                      <span class="badge badge-conf">Confianza: {{ aiAnalysis()?.confianza }}%</span>
+                      @let level = aiAnalysis()?.riesgo ?? 'Bajo';
+                      <span class="badge" [ngClass]="{
+                        'badge-danger': level === 'Alto',
+                        'badge-warning': level === 'Medio',
+                        'badge-success': level === 'Bajo'
+                      }">Riesgo: {{ level }}</span>
+                    </div>
+                  </mat-card-title>
+                </mat-card-header>
+                
+                <mat-card-content class="ai-content-body">
+                  <section class="ai-section">
+                    <h3>Resumen Ejecutivo</h3>
+                    <p class="ai-text">{{ aiAnalysis()?.resumen }}</p>
+                  </section>
+
+                  <section class="ai-section recomendacion-box">
+                    <h3>Acción Recomendada</h3>
+                    <p class="ai-text pre-wrap">{{ aiAnalysis()?.recomendacion }}</p>
+                  </section>
+                </mat-card-content>
+              </mat-card>
+
+              <!-- Panel Human in the Loop -->
+              <mat-card class="hitl-card">
+                <mat-card-header>
+                  <mat-card-title>Human-in-the-Loop Validation</mat-card-title>
+                </mat-card-header>
+                <mat-card-content class="hitl-content">
+                  <p class="hitl-instruction">
+                    La IA sugiere acciones de conciliación, pero tú conservas el control final de la operación. 
+                    Revisa las sugerencias de la izquierda y valida tu decisión para el registro del sistema:
+                  </p>
+
+                  @if (!approvalDecision()) {
+                    <div class="hitl-actions">
+                      <button mat-flat-button class="btn-approve" (click)="approve()">
+                        <mat-icon>check_circle</mat-icon>
+                        Aprobar Recomendación
+                      </button>
+                      <button mat-stroked-button class="btn-reject" (click)="reject()">
+                        <mat-icon>cancel</mat-icon>
+                        Rechazar Recomendación
+                      </button>
+                    </div>
+                  } @else {
+                    <div class="decision-result-banner" [ngClass]="approvalDecision() === 'approved' ? 'approved-banner' : 'rejected-banner'">
+                      @if (approvalDecision() === 'approved') {
+                        <mat-icon>verified</mat-icon>
+                        <div>
+                          <h4>Recomendación aprobada por el usuario</h4>
+                          <p>Se ha registrado tu validación positiva. Se programarán las disputas con transportadoras y ajustes de caja recomendados.</p>
+                        </div>
+                      } @else {
+                        <mat-icon>do_not_disturb_on</mat-icon>
+                        <div>
+                          <h4>Recomendación rechazada por el usuario</h4>
+                          <p>Se ha registrado tu decisión de archivar esta sugerencia. No se tomará ninguna acción automática.</p>
+                        </div>
+                      }
+                    </div>
+                    
+                    <div class="reset-decision">
+                      <button mat-button class="btn-secondary-flat" (click)="resetDecision()">
+                        <mat-icon>cached</mat-icon>
+                        Cambiar decisión
+                      </button>
+                    </div>
+                  }
+                </mat-card-content>
+              </mat-card>
+
+            </div>
+          }
+
+        </div>
+      </mat-tab>
+      
+    </mat-tab-group>
+  }
+</div>

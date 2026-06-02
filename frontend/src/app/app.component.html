@@ -1,0 +1,41 @@
+<div class="app-layout">
+  <!-- Navbar superior premium -->
+  <nav class="app-navbar">
+    <div class="nav-logo" routerLink="/dashboard">
+      <mat-icon class="logo-icon">navigation</mat-icon>
+      <span class="logo-text">Embarca <span class="logo-accent">AI Copilot</span></span>
+    </div>
+    
+    <div class="nav-links">
+      <a routerLink="/dashboard" routerLinkActive="active-link" class="nav-link">
+        <mat-icon>dashboard</mat-icon>
+        <span>Dashboard</span>
+      </a>
+      <a routerLink="/upload" routerLinkActive="active-link" class="nav-link">
+        <mat-icon>cloud_upload</mat-icon>
+        <span>Cargar Reportes</span>
+      </a>
+      <a routerLink="/results" routerLinkActive="active-link" class="nav-link">
+        <mat-icon>receipt_long</mat-icon>
+        <span>Resultados</span>
+      </a>
+    </div>
+
+    <div class="nav-badge-container">
+      <span class="pilot-badge">
+        <mat-icon>bolt</mat-icon>
+        <span>Human-in-the-Loop</span>
+      </span>
+    </div>
+  </nav>
+
+  <!-- Contenedor de las vistas -->
+  <main class="app-main-content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <p>Embarca AI Copilot – Prototipo de Conciliación Inteligente. Desarrollado con Angular 21, Node.js y Gemini.</p>
+  </footer>
+</div>

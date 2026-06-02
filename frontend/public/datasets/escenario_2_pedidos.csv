@@ -1,0 +1,4 @@
+pedido,valor,estado
+1001,50000,entregado
+1002,80000,entregado
+1003,60000,devuelto

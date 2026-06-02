@@ -1,0 +1,105 @@
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --primary-color: #2B9720;
+  --primary-light: #92E689;
+  --primary-dark: #002400;
+  --bg-color: #F5F5F5;
+  --card-shadow: 0 10px 30px rgba(0, 36, 0, 0.04);
+  --border-radius: 16px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Outfit', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--primary-dark);
+}
+
+/* Custom styles for overriding Material colors to match Embarca */
+.mat-mdc-card {
+  border-radius: var(--border-radius) !important;
+  box-shadow: var(--card-shadow) !important;
+  border: 1px solid rgba(146, 230, 137, 0.2) !important;
+  background: white !important;
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.mat-mdc-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(0, 36, 0, 0.08) !important;
+}
+
+.mat-mdc-button.mat-unthemed {
+  --mdc-filled-button-container-color: var(--primary-color) !important;
+  --mdc-filled-button-label-text-color: white !important;
+}
+
+.mat-mdc-unelevated-button.mat-primary {
+  --mdc-filled-button-container-color: var(--primary-color) !important;
+}
+
+.mat-mdc-tab-group {
+  --mdc-tab-indicator-active-indicator-color: var(--primary-color) !important;
+  --mat-tab-header-active-label-text-color: var(--primary-color) !important;
+  --mat-tab-header-active-focus-label-text-color: var(--primary-color) !important;
+  --mat-tab-header-active-hover-label-text-color: var(--primary-color) !important;
+}
+
+.mat-mdc-tab-header {
+  border-bottom: 1px solid rgba(146, 230, 137, 0.3) !important;
+}
+
+/* Utility classes */
+.btn-primary {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+  padding: 8px 20px !important;
+}
+
+.btn-primary:hover {
+  background-color: #24801b !important;
+}
+
+.btn-secondary {
+  border: 1.5px solid var(--primary-color) !important;
+  color: var(--primary-color) !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+  background: transparent !important;
+}
+
+.btn-secondary:hover {
+  background: rgba(43, 151, 32, 0.05) !important;
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-light);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color);
+}

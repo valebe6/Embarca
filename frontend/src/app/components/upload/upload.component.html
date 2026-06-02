@@ -1,0 +1,130 @@
+<div class="upload-container">
+  <header class="upload-header">
+    <h1 class="text-gradient">Cargar Reportes de Conciliación</h1>
+    <p>Sube los reportes del sistema de pedidos y el reporte de pagos recibidos de tu pasarela para iniciar el análisis.</p>
+  </header>
+
+  <!-- Barra de progreso -->
+  @if (isLoading()) {
+    <div class="loading-overlay">
+      <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
+      <p>Procesando reportes y aplicando reglas de conciliación...</p>
+    </div>
+  }
+
+  <!-- Mensaje de error -->
+  @if (errorMessage()) {
+    <div class="error-banner">
+      <mat-icon>error</mat-icon>
+      <span>{{ errorMessage() }}</span>
+    </div>
+  }
+
+  <div class="upload-grid">
+    <!-- Pedidos Card -->
+    <mat-card class="upload-card" [ngClass]="{'has-file': pedidosFile()}">
+      <mat-card-content class="file-card-content">
+        <div class="upload-icon-container blue">
+          <mat-icon>receipt_long</mat-icon>
+        </div>
+        <h2>Reporte de Pedidos</h2>
+        <p class="desc">Sube el archivo <strong>pedidos.csv</strong> que contiene columnas: <code>pedido</code>, <code>valor</code> y <code>estado</code>.</p>
+        
+        <div class="file-input-wrapper">
+          <button mat-stroked-button class="btn-secondary" (click)="pedidosInput.click()">
+            <mat-icon>attach_file</mat-icon>
+            {{ pedidosFile() ? 'Cambiar archivo' : 'Seleccionar pedidos.csv' }}
+          </button>
+          <input #pedidosInput type="file" accept=".csv" (change)="onPedidosSelected($event)" style="display: none;">
+        </div>
+
+        @if (pedidosFile()) {
+          <div class="selected-file-badge">
+            <mat-icon>check_circle</mat-icon>
+            <span class="file-name">{{ pedidosFile()?.name }}</span>
+            <span class="file-size">({{ (pedidosFile()?.size ?? 0) | number }} bytes)</span>
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Pagos Card -->
+    <mat-card class="upload-card" [ngClass]="{'has-file': pagosFile()}">
+      <mat-card-content class="file-card-content">
+        <div class="upload-icon-container orange">
+          <mat-icon>account_balance_wallet</mat-icon>
+        </div>
+        <h2>Reporte de Pagos</h2>
+        <p class="desc">Sube el archivo <strong>pagos.csv</strong> que contiene columnas: <code>pedido</code> y <code>pago_recibido</code>.</p>
+        
+        <div class="file-input-wrapper">
+          <button mat-stroked-button class="btn-secondary" (click)="pagosInput.click()">
+            <mat-icon>attach_file</mat-icon>
+            {{ pagosFile() ? 'Cambiar archivo' : 'Seleccionar pagos.csv' }}
+          </button>
+          <input #pagosInput type="file" accept=".csv" (change)="onPagosSelected($event)" style="display: none;">
+        </div>
+
+        @if (pagosFile()) {
+          <div class="selected-file-badge">
+            <mat-icon>check_circle</mat-icon>
+            <span class="file-name">{{ pagosFile()?.name }}</span>
+            <span class="file-size">({{ (pagosFile()?.size ?? 0) | number }} bytes)</span>
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Botón Ejecutar -->
+  <div class="action-bar">
+    <button mat-flat-button class="btn-primary process-btn" 
+            [disabled]="!pedidosFile() || !pagosFile() || isLoading()" 
+            (click)="uploadAndConciliate()">
+      <mat-icon>play_circle</mat-icon>
+      Procesar y Conciliar
+    </button>
+  </div>
+
+  <div class="divider">
+    <span>O BIEN</span>
+  </div>
+
+  <!-- Escenarios Rápidos -->
+  <div class="scenarios-section">
+    <h2>Prueba Interactiva con Datasets de Demostración</h2>
+    <p>Haz clic en cualquiera de los siguientes escenarios para cargar y simular datos predefinidos automáticamente sin tener que subir archivos manualmente.</p>
+    
+    <div class="scenarios-grid">
+      <!-- Escenario 1 -->
+      <mat-card class="scenario-card cursor-pointer" (click)="loadScenario(1)">
+        <mat-card-content>
+          <div class="scenario-badge green">Escenario 1</div>
+          <h3>Todo Conciliado</h3>
+          <p>Simula una operación perfecta donde todos los pedidos entregados tienen pagos correspondientes y exactos.</p>
+          <span class="scenario-action-link">Cargar y Ejecutar <mat-icon>arrow_forward</mat-icon></span>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Escenario 2 -->
+      <mat-card class="scenario-card cursor-pointer" (click)="loadScenario(2)">
+        <mat-card-content>
+          <div class="scenario-badge orange">Escenario 2</div>
+          <h3>Inconsistencias Moderadas</h3>
+          <p>Detecta un pago faltante para un pedido entregado y un cobro aplicado sobre un pedido devuelto.</p>
+          <span class="scenario-action-link">Cargar y Ejecutar <mat-icon>arrow_forward</mat-icon></span>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Escenario 3 -->
+      <mat-card class="scenario-card cursor-pointer" (click)="loadScenario(3)">
+        <mat-card-content>
+          <div class="scenario-badge red">Escenario 3</div>
+          <h3>Inconsistencias Críticas</h3>
+          <p>Simula un escenario crítico con pago faltante, pago sobre devolución y un pago huérfano (pedido inexistente).</p>
+          <span class="scenario-action-link">Cargar y Ejecutar <mat-icon>arrow_forward</mat-icon></span>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,166 @@
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <div class="header-text">
+      <h1 class="text-gradient">Resumen de Conciliación</h1>
+      <p>Supervisa el estado financiero y operativo de tus cobros y entregas de dropshipping.</p>
+    </div>
+    <button mat-flat-button class="btn-primary start-btn" routerLink="/upload">
+      <mat-icon>cloud_upload</mat-icon>
+      Nueva Conciliación
+    </button>
+  </header>
+
+  <!-- Métricas Principales -->
+  <div class="metrics-grid">
+    <!-- Pedidos Procesados -->
+    <mat-card class="metric-card">
+      <mat-card-content>
+        <div class="card-icon-container blue">
+          <mat-icon>shopping_bag</mat-icon>
+        </div>
+        <div class="card-values">
+          <h3>Pedidos Procesados</h3>
+          <p class="value">{{ result()?.metrics?.pedidosProcesados ?? 0 }}</p>
+          <span class="sub-text">Total de órdenes reportadas</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Pagos Procesados -->
+    <mat-card class="metric-card">
+      <mat-card-content>
+        <div class="card-icon-container orange">
+          <mat-icon>payments</mat-icon>
+        </div>
+        <div class="card-values">
+          <h3>Pagos Recibidos</h3>
+          <p class="value">{{ result()?.metrics?.pagosProcesados ?? 0 }}</p>
+          <span class="sub-text">Cobros reportados en pasarela</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Pedidos Conciliados -->
+    <mat-card class="metric-card">
+      <mat-card-content>
+        <div class="card-icon-container green">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <div class="card-values">
+          <h3>Conciliados</h3>
+          <p class="value success-text">{{ result()?.metrics?.pedidosConciliados ?? 0 }}</p>
+          <span class="sub-text">Entregados con pago correcto</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Inconsistencias -->
+    <mat-card class="metric-card">
+      <mat-card-content>
+        <div class="card-icon-container" [ngClass]="(result()?.metrics?.inconsistenciasDetectadas ?? 0) > 0 ? 'red' : 'green-light'">
+          <mat-icon>warning</mat-icon>
+        </div>
+        <div class="card-values">
+          <h3>Inconsistencias</h3>
+          <p class="value" [ngClass]="(result()?.metrics?.inconsistenciasDetectadas ?? 0) > 0 ? 'danger-text' : 'success-text'">
+            {{ result()?.metrics?.inconsistenciasDetectadas ?? 0 }}
+          </p>
+          <span class="sub-text">Problemas que requieren atención</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="details-section">
+    <!-- Indicador de Riesgo -->
+    <mat-card class="risk-card">
+      <mat-card-header>
+        <mat-card-title>Indicador de Riesgo Operativo</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="risk-content">
+        <div class="risk-gauge-container">
+          @let risk = result()?.metrics?.indicadorRiesgo ?? 'Sin Datos';
+          <div class="risk-badge" [ngClass]="{
+            'risk-low': risk === 'Bajo',
+            'risk-medium': risk === 'Medio',
+            'risk-high': risk === 'Alto',
+            'risk-none': risk === 'Sin Datos'
+          }">
+            <mat-icon>shield</mat-icon>
+            <span>{{ risk }}</span>
+          </div>
+        </div>
+        <div class="risk-desc">
+          @if (risk === 'Bajo') {
+            <p>El nivel de riesgo financiero es bajo. Los pagos concilian correctamente con las entregas y las discrepancias son mínimas o inexistentes.</p>
+          } @else if (risk === 'Medio') {
+            <p>Se detectaron discrepancias aisladas. Se recomienda aplicar las acciones correctivas sugeridas por el Copilot para regularizar la caja.</p>
+          } @else if (risk === 'Alto') {
+            <p class="danger-text"><strong>Riesgo crítico detectado.</strong> Existen múltiples pagos faltantes o cobros huérfanos que afectan directamente tu flujo de caja.</p>
+          } @else {
+            <p>No hay reportes de conciliación ejecutados recientemente. Sube archivos CSV para calcular el nivel de riesgo de tu operación.</p>
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Métricas de Impacto IA -->
+    <mat-card class="impact-card">
+      <mat-card-header>
+        <mat-card-title>Eficiencia Operativa con Copilot</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="efficiency-comparison">
+          <div class="time-box manual">
+            <span class="time-value">120 <small>min</small></span>
+            <span class="time-label">Conciliación Manual</span>
+          </div>
+          <div class="vs-divider">VS</div>
+          <div class="time-box ai">
+            <span class="time-value">5 <small>min</small></span>
+            <span class="time-label">Conciliación con IA</span>
+          </div>
+        </div>
+        
+        <div class="progress-container">
+          <div class="progress-labels">
+            <span>Reducción de esfuerzo operativo</span>
+            <span class="percentage-value">{{ result()?.metrics?.reduccionEsfuerzoPorcentaje ?? 95 }}%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" [style.width.%]="result()?.metrics?.reduccionEsfuerzoPorcentaje ?? 95"></div>
+          </div>
+        </div>
+
+        <p class="impact-statement">
+          Al usar el asistente inteligente de Embarca, automatizas la detección de discrepancias y recibes recomendaciones inmediatas, minimizando errores y disputas con transportadoras.
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Si no hay datos, mostrar CTA para subir archivos -->
+  @if (!result()) {
+    <mat-card class="welcome-card">
+      <mat-card-content>
+        <div class="welcome-content">
+          <mat-icon class="welcome-icon">query_stats</mat-icon>
+          <h2>Comienza a conciliar tus reportes</h2>
+          <p>
+            Carga tus reportes de pedidos y de pagos recibidos de pasarela para detectar inconsistencias automáticamente y recibir sugerencias asistidas por Inteligencia Artificial.
+          </p>
+          <button mat-flat-button class="btn-primary" routerLink="/upload">
+            Cargar reportes de prueba
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  } @else {
+    <div class="results-cta">
+      <button mat-flat-button class="btn-secondary" routerLink="/results">
+        Ver Detalle de Resultados y Análisis IA
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+    </div>
+  }
+</div>

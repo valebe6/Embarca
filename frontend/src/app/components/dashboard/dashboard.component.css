@@ -1,0 +1,358 @@
+.dashboard-container {
+  padding: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.header-text h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0 0 5px 0;
+}
+
+.header-text p {
+  color: #666;
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.start-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px !important;
+  font-size: 1rem !important;
+}
+
+/* Grid de Métricas */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.metric-card mat-card-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px !important;
+}
+
+.card-icon-container {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-icon-container mat-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+}
+
+.card-icon-container.blue {
+  background-color: rgba(33, 150, 243, 0.1);
+  color: #2196f3;
+}
+
+.card-icon-container.orange {
+  background-color: rgba(255, 152, 0, 0.1);
+  color: #ff9800;
+}
+
+.card-icon-container.green {
+  background-color: rgba(43, 151, 32, 0.1);
+  color: var(--primary-color);
+}
+
+.card-icon-container.green-light {
+  background-color: rgba(146, 230, 137, 0.15);
+  color: var(--primary-color);
+}
+
+.card-icon-container.red {
+  background-color: rgba(244, 67, 54, 0.1);
+  color: #f44336;
+}
+
+.card-values h3 {
+  font-size: 0.95rem;
+  color: #666;
+  margin: 0 0 5px 0;
+  font-weight: 500;
+}
+
+.card-values .value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0 0 2px 0;
+  line-height: 1;
+}
+
+.card-values .sub-text {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.success-text {
+  color: var(--primary-color);
+}
+
+.danger-text {
+  color: #d32f2f;
+}
+
+/* Sección de Detalles */
+.details-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+@media (max-width: 768px) {
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  
+  .details-section {
+    grid-template-columns: 1fr;
+  }
+  
+  .start-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.risk-card mat-card-header, .impact-card mat-card-header {
+  padding: 20px 20px 0 20px !important;
+}
+
+.risk-card mat-card-title, .impact-card mat-card-title {
+  font-size: 1.25rem !important;
+  font-weight: 600 !important;
+  color: var(--primary-dark);
+}
+
+.risk-content {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  padding: 25px 20px !important;
+}
+
+.risk-gauge-container {
+  flex-shrink: 0;
+}
+
+.risk-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.risk-badge mat-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+  margin-bottom: 4px;
+}
+
+.risk-low {
+  background-color: rgba(43, 151, 32, 0.1);
+  color: var(--primary-color);
+  border: 1.5px solid var(--primary-color);
+}
+
+.risk-medium {
+  background-color: rgba(255, 152, 0, 0.1);
+  color: #e65100;
+  border: 1.5px solid #ff9800;
+}
+
+.risk-high {
+  background-color: rgba(244, 67, 54, 0.1);
+  color: #c62828;
+  border: 1.5px solid #f44336;
+}
+
+.risk-none {
+  background-color: #eee;
+  color: #666;
+  border: 1.5px solid #bbb;
+}
+
+.risk-desc p {
+  margin: 0;
+  line-height: 1.5;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+/* Eficiencia Operativa */
+.impact-card mat-card-content {
+  padding: 20px !important;
+}
+
+.efficiency-comparison {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-bottom: 25px;
+  background: var(--bg-color);
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid rgba(146, 230, 137, 0.15);
+}
+
+.time-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.time-value {
+  font-size: 2.2rem;
+  font-weight: 700;
+}
+
+.time-value small {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #666;
+}
+
+.time-label {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 4px;
+}
+
+.manual .time-value {
+  color: #777;
+}
+
+.ai .time-value {
+  color: var(--primary-color);
+}
+
+.vs-divider {
+  font-weight: 700;
+  color: var(--primary-light);
+  font-size: 0.9rem;
+}
+
+.progress-container {
+  margin-bottom: 20px;
+}
+
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.percentage-value {
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+.progress-bar-bg {
+  height: 8px;
+  background-color: rgba(146, 230, 137, 0.2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary-light) 0%, var(--primary-color) 100%);
+  border-radius: 4px;
+  transition: width 1s ease-out;
+}
+
+.impact-statement {
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Welcome Card */
+.welcome-card {
+  text-align: center;
+  padding: 40px 20px !important;
+  margin-top: 20px;
+  border: 1.5px dashed var(--primary-light) !important;
+  background: rgba(146, 230, 137, 0.03) !important;
+}
+
+.welcome-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.welcome-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: var(--primary-color);
+  margin-bottom: 20px;
+}
+
+.welcome-content h2 {
+  font-size: 1.6rem;
+  margin: 0 0 10px 0;
+  font-weight: 600;
+}
+
+.welcome-content p {
+  color: #666;
+  margin-bottom: 25px;
+  line-height: 1.6;
+}
+
+.results-cta {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.results-cta button {
+  padding: 12px 24px !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
