@@ -7,8 +7,10 @@
   <!-- Barra de progreso -->
   @if (isLoading()) {
     <div class="loading-overlay">
-      <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
-      <p>Procesando reportes y aplicando reglas de conciliación...</p>
+      <div class="loading-spinner-container">
+        <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
+        <p>Procesando reportes y aplicando reglas de conciliación...</p>
+      </div>
     </div>
   }
 
@@ -22,10 +24,17 @@
 
   <div class="upload-grid">
     <!-- Pedidos Card -->
-    <mat-card class="upload-card" [ngClass]="{'has-file': pedidosFile()}">
+    <mat-card class="upload-card card-blue-glow" [ngClass]="{'has-file': pedidosFile()}">
       <mat-card-content class="file-card-content">
-        <div class="upload-icon-container blue">
-          <mat-icon>receipt_long</mat-icon>
+        <div class="upload-illustration-container">
+          <svg class="file-icon-svg" viewBox="0 0 100 100" width="70" height="70">
+            <circle cx="50" cy="50" r="45" fill="rgba(33, 150, 243, 0.06)"/>
+            <path d="M35,25 L55,25 L65,35 L65,75 L35,75 Z" fill="none" stroke="#2196f3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M55,25 L55,35 L65,35" fill="none" stroke="#2196f3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="42" y1="45" x2="58" y2="45" stroke="#2196f3" stroke-width="3" stroke-linecap="round"/>
+            <line x1="42" y1="55" x2="58" y2="55" stroke="#2196f3" stroke-width="3" stroke-linecap="round"/>
+            <line x1="42" y1="65" x2="50" y2="65" stroke="#2196f3" stroke-width="3" stroke-linecap="round"/>
+          </svg>
         </div>
         <h2>Reporte de Pedidos</h2>
         <p class="desc">Sube el archivo <strong>pedidos.csv</strong> que contiene columnas: <code>pedido</code>, <code>valor</code> y <code>estado</code>.</p>
@@ -39,7 +48,7 @@
         </div>
 
         @if (pedidosFile()) {
-          <div class="selected-file-badge">
+          <div class="selected-file-badge file-blue">
             <mat-icon>check_circle</mat-icon>
             <span class="file-name">{{ pedidosFile()?.name }}</span>
             <span class="file-size">({{ (pedidosFile()?.size ?? 0) | number }} bytes)</span>
@@ -49,10 +58,15 @@
     </mat-card>
 
     <!-- Pagos Card -->
-    <mat-card class="upload-card" [ngClass]="{'has-file': pagosFile()}">
+    <mat-card class="upload-card card-orange-glow" [ngClass]="{'has-file': pagosFile()}">
       <mat-card-content class="file-card-content">
-        <div class="upload-icon-container orange">
-          <mat-icon>account_balance_wallet</mat-icon>
+        <div class="upload-illustration-container">
+          <svg class="file-icon-svg" viewBox="0 0 100 100" width="70" height="70">
+            <circle cx="50" cy="50" r="45" fill="rgba(255, 152, 0, 0.06)"/>
+            <path d="M30,35 C30,32 32,30 35,30 L65,30 C68,30 70,32 70,35 L70,65 C70,68 68,70 65,70 L35,70 C32,70 30,68 30,65 Z" fill="none" stroke="#ff9800" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M70,45 L55,45 C52.2,45 50,47.2 50,50 C50,52.8 52.2,55 55,55 L70,55" fill="none" stroke="#ff9800" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="60" cy="50" r="3" fill="#ff9800"/>
+          </svg>
         </div>
         <h2>Reporte de Pagos</h2>
         <p class="desc">Sube el archivo <strong>pagos.csv</strong> que contiene columnas: <code>pedido</code> y <code>pago_recibido</code>.</p>
@@ -66,7 +80,7 @@
         </div>
 
         @if (pagosFile()) {
-          <div class="selected-file-badge">
+          <div class="selected-file-badge file-orange">
             <mat-icon>check_circle</mat-icon>
             <span class="file-name">{{ pagosFile()?.name }}</span>
             <span class="file-size">({{ (pagosFile()?.size ?? 0) | number }} bytes)</span>
@@ -97,7 +111,7 @@
     
     <div class="scenarios-grid">
       <!-- Escenario 1 -->
-      <mat-card class="scenario-card cursor-pointer" (click)="loadScenario(1)">
+      <mat-card class="scenario-card card-green-glow cursor-pointer" (click)="loadScenario(1)">
         <mat-card-content>
           <div class="scenario-badge green">Escenario 1</div>
           <h3>Todo Conciliado</h3>
@@ -107,7 +121,7 @@
       </mat-card>
 
       <!-- Escenario 2 -->
-      <mat-card class="scenario-card cursor-pointer" (click)="loadScenario(2)">
+      <mat-card class="scenario-card card-orange-glow cursor-pointer" (click)="loadScenario(2)">
         <mat-card-content>
           <div class="scenario-badge orange">Escenario 2</div>
           <h3>Inconsistencias Moderadas</h3>
@@ -117,7 +131,7 @@
       </mat-card>
 
       <!-- Escenario 3 -->
-      <mat-card class="scenario-card cursor-pointer" (click)="loadScenario(3)">
+      <mat-card class="scenario-card card-red-glow cursor-pointer" (click)="loadScenario(3)">
         <mat-card-content>
           <div class="scenario-badge red">Escenario 3</div>
           <h3>Inconsistencias Críticas</h3>
