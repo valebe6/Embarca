@@ -86,4 +86,10 @@ export class ResultsComponent {
   backToUpload(): void {
     this.router.navigate(['/upload']);
   }
+
+  getStrokeDashoffset(percent: number): number {
+    const radius = 58;
+    const circumference = 2 * Math.PI * radius;
+    return circumference - (percent / 100) * circumference;
+  }
 }

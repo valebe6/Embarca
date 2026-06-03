@@ -20,15 +20,17 @@
   @if (!result()) {
     <mat-card class="no-data-card">
       <mat-card-content>
-        <mat-icon>error_outline</mat-icon>
-        <h2>No hay resultados disponibles</h2>
-        <p>Aún no has ejecutado ninguna conciliación. Por favor, carga los archivos pedidos.csv y pagos.csv para ver los resultados.</p>
-        <button mat-flat-button class="btn-primary" (click)="backToUpload()">Cargar archivos</button>
+        <div class="no-data-content">
+          <mat-icon class="no-data-icon">error_outline</mat-icon>
+          <h2>No hay resultados disponibles</h2>
+          <p>Aún no has ejecutado ninguna conciliación. Por favor, carga los archivos pedidos.csv y pagos.csv para ver los resultados.</p>
+          <button mat-flat-button class="btn-primary" (click)="backToUpload()">Cargar archivos</button>
+        </div>
       </mat-card-content>
     </mat-card>
   } @else {
     <!-- Tab Group principal -->
-    <mat-tab-group animationDuration="200ms" class="results-tabs">
+    <mat-tab-group animationDuration="400ms" class="results-tabs">
       
       <!-- TAB 1: RESUMEN GENERAL -->
       <mat-tab label="Resumen General">
@@ -43,11 +45,11 @@
 
               <!-- Tarjetas rápidas -->
               <div class="summary-cards">
-                <div class="summary-mini-card green">
+                <div class="summary-mini-card green card-green-glow">
                   <span class="num">{{ metrics?.pedidosConciliados }}</span>
                   <span class="label">Conciliados Correctamente</span>
                 </div>
-                <div class="summary-mini-card" [ngClass]="(metrics?.inconsistenciasDetectadas ?? 0) > 0 ? 'red' : 'green-light'">
+                <div class="summary-mini-card" [ngClass]="(metrics?.inconsistenciasDetectadas ?? 0) > 0 ? 'red card-red-glow' : 'green-light card-green-glow'">
                   <span class="num">{{ metrics?.inconsistenciasDetectadas }}</span>
                   <span class="label">Inconsistencias Detectadas</span>
                 </div>
@@ -77,9 +79,18 @@
               <mat-card class="graphic-card">
                 <mat-card-content>
                   <h3>Rendimiento del Asistente</h3>
-                  <div class="gauge-display">
-                    <span class="gauge-num">{{ metrics?.reduccionEsfuerzoPorcentaje }}%</span>
-                    <span class="gauge-label">Ahorro de Tiempo</span>
+                  <div class="progress-ring-container">
+                    <svg class="progress-ring-svg" width="140" height="140">
+                      <!-- Base circle -->
+                      <circle class="progress-ring-bg" cx="70" cy="70" r="58" stroke-width="8"/>
+                      <!-- Filled circle -->
+                      <circle class="progress-ring-fill" cx="70" cy="70" r="58" stroke-width="8"
+                               [style.strokeDashoffset]="getStrokeDashoffset(metrics?.reduccionEsfuerzoPorcentaje ?? 95)"/>
+                    </svg>
+                    <div class="progress-ring-text">
+                      <span class="ring-num">{{ metrics?.reduccionEsfuerzoPorcentaje ?? 95 }}%</span>
+                      <span class="ring-label">Ahorro</span>
+                    </div>
                   </div>
                   <p class="desc">
                     El proceso de conciliación manual te habría tomado aproximadamente <strong>2 horas (120 minutos)</strong>. 
@@ -193,9 +204,17 @@
           
           @if (isLoadingAI()) {
             <div class="ai-loading-card">
-              <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
+              <div class="ai-thinking-orb-container">
+                <div class="thinking-orb">
+                  <div class="orb-wave wave-1"></div>
+                  <div class="orb-wave wave-2"></div>
+                  <div class="orb-wave wave-3"></div>
+                  <div class="orb-core">
+                    <mat-icon>psychology</mat-icon>
+                  </div>
+                </div>
+              </div>
               <div class="ai-loading-text">
-                <mat-icon class="spin-icon">psychology</mat-icon>
                 <h3>Gemini está analizando las inconsistencias...</h3>
                 <p>Priorizando riesgos, estructurando hipótesis y formulando acciones operativas de resolución.</p>
               </div>
