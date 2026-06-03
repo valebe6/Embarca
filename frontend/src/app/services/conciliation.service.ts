@@ -48,7 +48,9 @@ export interface AIAnalysis {
 })
 export class ConciliationService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api';
+  private apiUrl = typeof window !== 'undefined' && window.location.hostname === 'localhost' 
+    ? 'http://localhost:3000/api' 
+    : '/api';
 
   // Signals para el manejo del estado reactivo
   readonly pedidos = signal<Pedido[]>([]);
